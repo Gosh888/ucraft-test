@@ -46,6 +46,7 @@ export default (sequelize, DataTypes) => {
 
   User.associate = (models) => {
     models.User.hasMany(models.UserRoom);
+    models.User.hasMany(models.UserOption);
   };
 
   return User;

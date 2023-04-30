@@ -23,13 +23,6 @@ export default (sequelize, DataTypes) => {
           fields: ['name'],
         },
       ],
-      hooks: {
-        afterDestroy(instance, options) {
-          console.log('instance', instance);
-          // instance.getProduct().then((product) => product.destroy()); // Softdelete on product table
-          // console.log('after destroy: destroyed');
-        },
-      },
     },
   );
 

@@ -3,7 +3,7 @@ import db from '../../services/db.js';
 
 export const getRoomsController = async (req, res, next) => {
   try {
-    const got = await getRoomsService(req.query, null, [db.User]);
+    const got = await getRoomsService(req.query, null, [db.User, db.UserRoom]);
     return res.send(got);
   } catch (err) {
     next(err);

@@ -10,10 +10,11 @@ import {
 import { GENERAL_ERRORS, ROOM_ERRORS } from '../../utils/error-messages.js';
 import { createMessageService } from '../message/message.service.js';
 import {
-  createUserRoomService,
+  createUserRoomService, deleteUserRoomByIdService,
   deleteUserRoomByIdsService,
   getUserRoomByIdsOrFailService,
 } from '../user-room/user-room.service.js';
+import db from '../../services/db.js';
 
 export const getRoomsService = async (query, attributes, include) => getRoomsRepo(query, attributes, include);
 
@@ -52,15 +53,16 @@ export const updateRoomByIdService = async (id, room) => {
 };
 
 export const deleteRoomByIdService = async (userId, id) => {
-  const got = await getRoomByIdOrFailService(id, ['ownerId']);
+  const got = await getRoomByIdOrFailService(id, ['ownerId'], [db.UserRoom]);
   if (got.ownerId !== userId) {
     throw new ServiceError(ROOM_ERRORS.isOwnerDeleteRoom, 403);
   }
+  await Promise.all(got.userRooms.map((ur) => deleteUserRoomByIdService(ur.id)));
   await deleteRoomByIdRepo(id);
   return { message: 'deleted' };
 };
 
-export const joinRoomByIdService = async (socket, id) => {
+export const joinRoomByIdService = async (io, socket, id) => {
   await getRoomByIdOrFailService(id, ['id']);
   await createUserRoomService({ userId: socket.user.id, roomId: id });
   socket.join(`room:${id}`);
@@ -68,7 +70,7 @@ export const joinRoomByIdService = async (socket, id) => {
   return { message: 'joined' };
 };
 
-export const leaveRoomByIdService = async (socket, id) => {
+export const leaveRoomByIdService = async (io, socket, id) => {
   await getRoomByIdOrFailService(id, ['id']);
   await deleteUserRoomByIdsService(socket.user.id, id);
   socket.leave(`room:${id}`);
@@ -76,12 +78,9 @@ export const leaveRoomByIdService = async (socket, id) => {
   return { message: 'leaved' };
 };
 
-export const messageRoomByIdService = async (socket, message, id) => {
-  await Promise.all([
-    getRoomByIdOrFailService(id, ['id']),
-    getUserRoomByIdsOrFailService(socket.user.id, id, ['id'])]);
-
+export const messageRoomByIdService = async (io, socket, message, id) => {
+  await Promise.all([getUserRoomByIdsOrFailService(socket.user.id, id, ['id'])]);
   await createMessageService(message, socket.user.id, id);
-  socket.in(`room:${id}`).emit('room:messaged', { user: socket.user, message });
+  io.sockets.in(`room:${id}`).emit('room:messaged', { user: socket.user, message });
   return { message: 'messaged' };
 };

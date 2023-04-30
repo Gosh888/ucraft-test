@@ -47,7 +47,6 @@ export const updateUserRoomByIdService = async (id, userRoom) => {
 };
 
 export const deleteUserRoomByIdService = async (id) => {
-  await getUserRoomByIdOrFailService(id, ['id']);
   await deleteUserRoomByIdRepo(id);
   return { message: 'deleted' };
 };

@@ -23,3 +23,7 @@ export const ROOM_ERRORS = {
   isOwnerDeleteRoom: 'Only owner can delete room',
   isJoined: 'You Already joined to room',
 };
+
+export const POLL_ERRORS = {
+  isVoted: 'You Already vote the poll',
+};
