@@ -21,6 +21,7 @@
         "no-useless-escape":"off",
         "implicit-arrow-linebreak":"off",
         "max-len": "off",
-        "no-underscore-dangle": "off"
+        "no-underscore-dangle": "off",
+        "no-param-reassign": "off"
     }
 }

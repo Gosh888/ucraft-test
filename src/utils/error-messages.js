@@ -18,3 +18,8 @@ export const USER_ERRORS = {
   emailNotConfirmed: 'Email not confirmed ',
   superAdminFrozen: 'Super Admin is frozen you cant update or delete item ',
 };
+
+export const ROOM_ERRORS = {
+  isOwnerDeleteRoom: 'Only owner can delete room',
+  isJoined: 'You Already joined to room',
+};

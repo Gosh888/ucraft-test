@@ -14,8 +14,8 @@ export const signupService = async (body) => {
   try {
     const user = await createUserService(body);
     const jwt = signToken({ id: user.id }, '15m', process.env.JWT_ACCESS_SECRET);
-    const massage = `Please verify your account click by ${process.env.FRONT_URL}/confirmation/${jwt}`;
-    await sendEmail(body.email, 'SignUp verification', massage);
+    const message = `Please verify your account click by ${process.env.FRONT_URL}/confirmation/${jwt}`;
+    await sendEmail(body.email, 'SignUp verification', message);
 
     return user;
   } catch (err) {
@@ -75,25 +75,25 @@ export const confirmService = async (body) => {
 
   await updateUserByIdService(decoded.id, { isConfirmed: true });
 
-  return { massage: 'confirm' };
+  return { message: 'confirm' };
 };
 
 export const resendVerificationService = async (body) => {
   const user = await getUserByEmailOrFailService(body.email, ['id']);
   const jwt = signToken({ id: user.id }, '15m', process.env.JWT_ACCESS_SECRET);
-  const massage = `Please verify your account click by ${process.env.FRONT_URL}/confirmation/${jwt}`;
-  await sendEmail(body.email, 'SignUp verification', massage);
+  const message = `Please verify your account click by ${process.env.FRONT_URL}/confirmation/${jwt}`;
+  await sendEmail(body.email, 'SignUp verification', message);
 
-  return { massage: 'resend' };
+  return { message: 'resend' };
 };
 
 export const forgetPasswordService = async (body) => {
   const user = await getUserByEmailOrFailService(body.email, ['id']);
   const jwt = signToken({ id: user.id }, '15m', process.env.JWT_ACCESS_SECRET);
-  const massage = `Please verify your account click by ${process.env.FRONT_URL}/forget-password/${jwt}`;
-  await sendEmail(body.email, 'SignUp verification', massage);
+  const message = `Please verify your account click by ${process.env.FRONT_URL}/forget-password/${jwt}`;
+  await sendEmail(body.email, 'SignUp verification', message);
 
-  return { massage: 'send email' };
+  return { message: 'send email' };
 };
 
 export const newPasswordService = async (body) => {
@@ -106,5 +106,5 @@ export const newPasswordService = async (body) => {
 
   await updateUserByIdService(decoded.id, { password: hashPassword(body.password) });
 
-  return { massage: 'reassign password' };
+  return { message: 'reassign password' };
 };

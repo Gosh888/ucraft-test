@@ -1,4 +1,5 @@
 import { matchedData, validationResult } from 'express-validator';
+import { JoiError } from '../utils/error-handling.js';
 
 export const validationResultMiddleware = (req, res, next) => {
   const errors = validationResult(req);
@@ -11,4 +12,17 @@ export const validationResultMiddleware = (req, res, next) => {
   });
 
   next();
+};
+
+export const validateJoi = (schema, payload) => {
+  const { error, value } = schema.validate(payload, {
+    abortEarly: false,
+    stripUnknown: true,
+  });
+
+  if (error) {
+    throw new JoiError(error.details);
+  }
+
+  return value;
 };

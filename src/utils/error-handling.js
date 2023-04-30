@@ -1,10 +1,10 @@
 export class ValidatorError extends Error {
-  constructor(massage, statusCode = 403, internalStatusCode = 0) {
-    super(massage);
+  constructor(message, statusCode = 403, internalStatusCode = 0) {
+    super(message);
     this.statusCode = statusCode;
     this.errors = [
       {
-        msg: massage,
+        msg: message,
         location: 'validation',
         internalStatusCode,
       },
@@ -13,12 +13,12 @@ export class ValidatorError extends Error {
 }
 
 export class ServiceError extends Error {
-  constructor(massage, statusCode, internalStatusCode = 0) {
-    super(massage);
+  constructor(message, statusCode, internalStatusCode = 0) {
+    super(message);
     this.statusCode = statusCode;
     this.errors = [
       {
-        msg: massage,
+        msg: message,
         location: 'service',
         internalStatusCode,
       },
@@ -27,15 +27,23 @@ export class ServiceError extends Error {
 }
 
 export class RepositoryError extends Error {
-  constructor(massage, statusCode, internalStatusCode = 0) {
-    super(massage);
+  constructor(message, statusCode, internalStatusCode = 0) {
+    super(message);
     this.statusCode = statusCode;
     this.errors = [
       {
-        msg: massage,
+        msg: message,
         location: 'repository',
         internalStatusCode,
       },
     ];
+  }
+}
+
+export class JoiError extends Error {
+  constructor(errors, statusCode = 403) {
+    super('Joi Error');
+    this.statusCode = statusCode;
+    this.errors = errors.map((e) => ({ msg: e.message, path: e.path[0] }));
   }
 }

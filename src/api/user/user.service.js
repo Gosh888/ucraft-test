@@ -45,13 +45,13 @@ export const createUserService = async (user) => {
 };
 
 export const updateUserByIdService = async (id, user) => {
-  await getUserByIdOrFailService(id, null);
+  await getUserByIdOrFailService(id, ['id']);
   await updateUserByIdRepo(id, user);
   return { message: 'updated' };
 };
 
 export const deleteUserByIdService = async (id) => {
-  await getUserByIdOrFailService(id, null);
+  await getUserByIdOrFailService(id, ['id']);
   await deleteUserByIdRepo(id);
   return { message: 'deleted' };
 };
