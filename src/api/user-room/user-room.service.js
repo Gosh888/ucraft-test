@@ -51,3 +51,9 @@ export const deleteUserRoomByIdService = async (id) => {
   await deleteUserRoomByIdRepo(id);
   return { message: 'deleted' };
 };
+
+export const deleteUserRoomByIdsService = async (userId, roomId) => {
+  const got = await getUserRoomByIdsOrFailService(userId, roomId, ['id']);
+  await deleteUserRoomByIdRepo(got.id);
+  return { message: 'deleted' };
+};

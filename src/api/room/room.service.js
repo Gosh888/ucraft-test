@@ -9,7 +9,11 @@ import {
 } from './room.repo.js';
 import { GENERAL_ERRORS, ROOM_ERRORS } from '../../utils/error-messages.js';
 import { createMessageService } from '../message/message.service.js';
-import { createUserRoomService, getUserRoomByIdsOrFailService } from '../user-room/user-room.service.js';
+import {
+  createUserRoomService,
+  deleteUserRoomByIdsService,
+  getUserRoomByIdsOrFailService,
+} from '../user-room/user-room.service.js';
 
 export const getRoomsService = async (query, attributes, include) => getRoomsRepo(query, attributes, include);
 
@@ -60,8 +64,16 @@ export const joinRoomByIdService = async (socket, id) => {
   await getRoomByIdOrFailService(id, ['id']);
   await createUserRoomService({ userId: socket.user.id, roomId: id });
   socket.join(`room:${id}`);
-  socket.broadcast.to(`room:${id}`).emit('room:joined', `${socket.user.firstName} join to room`);
+  socket.broadcast.to(`room:${id}`).emit('room:inform', `${socket.user.firstName} join to room`);
   return { message: 'joined' };
+};
+
+export const leaveRoomByIdService = async (socket, id) => {
+  await getRoomByIdOrFailService(id, ['id']);
+  await deleteUserRoomByIdsService(socket.user.id, id);
+  socket.leave(`room:${id}`);
+  socket.broadcast.to(`room:${id}`).emit('room:inform', `${socket.user.firstName} leave the room`);
+  return { message: 'leaved' };
 };
 
 export const messageRoomByIdService = async (socket, message, id) => {
