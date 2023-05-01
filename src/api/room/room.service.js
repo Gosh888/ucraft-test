@@ -26,14 +26,6 @@ export const getRoomByIdOrFailService = async (id, attributes, include) => {
   return got;
 };
 
-export const getRoomByNameOrFailService = async (name, attributes, include) => {
-  const got = await getRoomByNameRepo(name, attributes, include);
-  if (got == null) {
-    throw new ServiceError(GENERAL_ERRORS.notFound('Room'), 403);
-  }
-  return got;
-};
-
 export const getRoomByNameService = async (name, attributes, include) => getRoomByNameRepo(name, attributes, include);
 
 export const createRoomService = async (userId, room) => {
@@ -43,11 +35,14 @@ export const createRoomService = async (userId, room) => {
     throw new ServiceError(GENERAL_ERRORS.isExists('Name'), 403);
   }
 
-  return createRoomRepo({ creatorId: userId, ...room });
+  return createRoomRepo({ ownerId: userId, ...room });
 };
 
-export const updateRoomByIdService = async (id, room) => {
-  await getRoomByIdOrFailService(id, ['id']);
+export const updateRoomByIdService = async (userId, id, room) => {
+  const got = await getRoomByIdOrFailService(id, ['ownerId']);
+  if (got.ownerId !== userId) {
+    throw new ServiceError(ROOM_ERRORS.isOwnerDeleteRoom, 403);
+  }
   await updateRoomByIdRepo(id, room);
   return { message: 'updated' };
 };

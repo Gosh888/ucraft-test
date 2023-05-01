@@ -1,16 +1,9 @@
 import { ServiceError } from '../../utils/error-handling.js';
 import {
-  createUserRepo,
-  deleteUserByIdRepo,
-  getUserByEmailRepo,
-  getUserByIdRepo,
-  getUsersRepo,
-  updateUserByIdRepo,
+  createUserRepo, getUserByEmailRepo, getUserByIdRepo, updateUserByIdRepo,
 } from './user.repo.js';
 import { hashPassword } from '../../services/bcrypt.js';
 import { GENERAL_ERRORS } from '../../utils/error-messages.js';
-
-export const getUsersService = async (query, attributes, include) => getUsersRepo(query, attributes, include);
 
 export const getUserByIdOrFailService = async (id, attributes, include) => {
   const got = await getUserByIdRepo(id, attributes, include);
@@ -48,10 +41,4 @@ export const updateUserByIdService = async (id, user) => {
   await getUserByIdOrFailService(id, ['id']);
   await updateUserByIdRepo(id, user);
   return { message: 'updated' };
-};
-
-export const deleteUserByIdService = async (id) => {
-  await getUserByIdOrFailService(id, ['id']);
-  await deleteUserByIdRepo(id);
-  return { message: 'deleted' };
 };

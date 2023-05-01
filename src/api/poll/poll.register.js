@@ -1,4 +1,4 @@
-import { validateJoi } from '../../middlewares/validation-result.js';
+import { validateJoi } from '../../utils/validation-result.js';
 import { pollCreateSocketValidator, pollVoteSocketValidator } from './poll.validator.js';
 import { createPollService, votePollService } from './poll.service.js';
 

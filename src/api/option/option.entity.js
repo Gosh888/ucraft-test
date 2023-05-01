@@ -22,6 +22,7 @@ export default (sequelize, DataTypes) => {
 
   Option.associate = (models) => {
     models.Option.hasMany(models.UserOption);
+    models.Option.belongsTo(models.Poll);
   };
 
   return Option;

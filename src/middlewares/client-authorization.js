@@ -16,7 +16,6 @@ export const clientAuthorization = async (req, res, next) => {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
-      username: user.username,
     };
 
     next();

@@ -1,6 +1,6 @@
 import { body, param, query } from 'express-validator';
 import Joi from 'joi';
-import { validationResultMiddleware } from '../../middlewares/validation-result.js';
+import { validationResultMiddleware } from '../../utils/validation-result.js';
 import { GENERAL_ERRORS } from '../../utils/error-messages.js';
 
 export const getAllValidator = [
@@ -16,6 +16,16 @@ export const getAllValidator = [
 
 export const createValidator = [
   body('name').notEmpty().withMessage(GENERAL_ERRORS.isRequired('Name'))
+    .isLength({ min: 2, max: 15 })
+    .withMessage(GENERAL_ERRORS.fieldFromToString('Name', 2, 15))
+    .matches(/^[A-Z]/)
+    .withMessage(GENERAL_ERRORS.firstLetterUppercase),
+  validationResultMiddleware,
+];
+
+export const updateValidator = [
+  param('id').toInt(),
+  body('name').optional().notEmpty().withMessage(GENERAL_ERRORS.isRequired('Name'))
     .isLength({ min: 2, max: 15 })
     .withMessage(GENERAL_ERRORS.fieldFromToString('Name', 2, 15))
     .matches(/^[A-Z]/)

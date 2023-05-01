@@ -1,5 +1,5 @@
 import { joinRoomByIdService, leaveRoomByIdService, messageRoomByIdService } from './room.service.js';
-import { validateJoi } from '../../middlewares/validation-result.js';
+import { validateJoi } from '../../utils/validation-result.js';
 import { roomJoinSocketValidator, roomMessageSocketValidator } from './room.validator.js';
 
 export const roomRegister = (io, socket) => {
@@ -32,6 +32,7 @@ export const roomRegister = (io, socket) => {
       });
     }
   });
+
   socket.on('room:message', async (payload) => {
     try {
       const { message, roomId } = validateJoi(roomMessageSocketValidator, payload);

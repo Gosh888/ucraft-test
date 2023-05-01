@@ -1,5 +1,5 @@
 import { matchedData, validationResult } from 'express-validator';
-import { JoiError } from '../utils/error-handling.js';
+import { JoiError } from './error-handling.js';
 
 export const validationResultMiddleware = (req, res, next) => {
   const errors = validationResult(req);

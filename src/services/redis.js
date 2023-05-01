@@ -1,10 +1,12 @@
 import redis from 'redis';
 
 export const dbRedisConfig = async () => {
-  const client = await redis.createClient({
-    host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT,
-  });
+  const url = `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`;
+  const client = await redis.createClient(
+    {
+      url,
+    },
+  );
   client.on('error', (error) => {
     console.log(`client Error REDIS ${error}`);
   });

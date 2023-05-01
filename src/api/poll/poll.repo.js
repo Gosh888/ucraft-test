@@ -23,19 +23,3 @@ export const createPollRepo = async (poll) => {
     throw new RepositoryError(err.message, 500);
   }
 };
-
-export const updatePollByIdRepo = async (id, poll) => {
-  try {
-    return await db.Poll.update(poll, { where: { id } });
-  } catch (err) {
-    throw new RepositoryError(err.message, 500);
-  }
-};
-
-export const deletePollByIdRepo = async (id) => {
-  try {
-    return await db.Poll.destroy({ where: { id } });
-  } catch (err) {
-    throw new RepositoryError(err.message, 500);
-  }
-};

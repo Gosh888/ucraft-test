@@ -1,5 +1,5 @@
 import { body } from 'express-validator';
-import { validationResultMiddleware } from '../../middlewares/validation-result.js';
+import { validationResultMiddleware } from '../../utils/validation-result.js';
 import { GENERAL_ERRORS } from '../../utils/error-messages.js';
 
 export const signupValidator = [
