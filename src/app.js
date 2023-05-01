@@ -1,9 +1,6 @@
 import express from 'express';
 import authRouter from './api/auth/auth.rout.js';
 import roomRouter from './api/room/room.rout.js';
-import { initProject } from './init.js';
-
-await initProject();
 
 export const app = express();
 app.use(express.json());

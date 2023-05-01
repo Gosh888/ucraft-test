@@ -1,6 +1,9 @@
 import http from 'http';
 import { app } from './src/app.js';
 import { createSocket } from './src/ws.js';
+import { initProject } from './src/init.js';
+
+await initProject();
 
 const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
