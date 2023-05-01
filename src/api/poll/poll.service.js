@@ -33,6 +33,7 @@ export const votePollService = async (io, socket, payload) => {
   const { optionId } = payload;
   const gotVote = await getOptionByIdOrFailService(optionId, ['id', 'pollId'], [{
     model: db.Poll,
+    attributes: ['roomId'],
   }]);
   await getUserRoomByIdsOrFailService(socket.user.id, gotVote.poll.roomId, ['id']);
   await createUserOptionService({ userId: socket.user.id, optionId });

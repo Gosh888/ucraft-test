@@ -74,7 +74,7 @@ export const leaveRoomByIdService = async (io, socket, id) => {
 };
 
 export const messageRoomByIdService = async (io, socket, message, id) => {
-  await Promise.all([getUserRoomByIdsOrFailService(socket.user.id, id, ['id'])]);
+  await getUserRoomByIdsOrFailService(socket.user.id, id, ['id']);
   await createMessageService(message, socket.user.id, id);
   io.sockets.in(`room:${id}`).emit('room:messaged', { user: socket.user, message });
   return { message: 'messaged' };
