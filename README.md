@@ -1,6 +1,6 @@
 ## Description
 
-Project with socket.io search
+Project with socket.io
 
 ## Starting dev mode commands
 

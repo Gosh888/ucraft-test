@@ -3,3 +3,5 @@
 .env
 .idea
 /uploads
+/ucraft-postgres-data
+/ucraft-redis-data

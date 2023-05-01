@@ -13,6 +13,14 @@ export const getUserByIdOrFailService = async (id, attributes, include) => {
   return got;
 };
 
+export const getUserConfirmedByIdOrFailService = async (id, attributes, include) => {
+  const got = await getUserByIdRepo(id, attributes, include);
+  if (got == null || !got.isConfirmed) {
+    throw new ServiceError(GENERAL_ERRORS.notFound('User'), 403);
+  }
+  return got;
+};
+
 export const getUserByEmailOrFailService = async (email, attributes, include) => {
   const got = await getUserByEmailRepo(email, attributes, include);
   if (got == null) {

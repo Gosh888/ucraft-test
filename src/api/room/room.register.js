@@ -7,8 +7,7 @@ export const roomRegister = (io, socket) => {
     try {
       const { roomId } = validateJoi(roomJoinSocketValidator, payload);
 
-      const joined = await joinRoomByIdService(io, socket, roomId);
-      return socket.emit('response', joined);
+      return await joinRoomByIdService(io, socket, roomId);
     } catch (err) {
       console.log(err);
       return socket.emit('error', {
@@ -22,8 +21,7 @@ export const roomRegister = (io, socket) => {
     try {
       const { roomId } = validateJoi(roomJoinSocketValidator, payload);
 
-      const joined = await leaveRoomByIdService(io, socket, roomId);
-      return socket.emit('response', joined);
+      return await leaveRoomByIdService(io, socket, roomId);
     } catch (err) {
       console.log(err);
       return socket.emit('error', {
@@ -36,8 +34,7 @@ export const roomRegister = (io, socket) => {
   socket.on('room:message', async (payload) => {
     try {
       const { message, roomId } = validateJoi(roomMessageSocketValidator, payload);
-      const messaged = await messageRoomByIdService(io, socket, message, roomId);
-      return socket.emit('response', messaged);
+      return await messageRoomByIdService(io, socket, message, roomId);
     } catch (err) {
       console.log(err);
       return socket.emit('error', {

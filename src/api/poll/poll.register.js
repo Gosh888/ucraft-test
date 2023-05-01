@@ -6,9 +6,7 @@ export const pollRegister = (io, socket) => {
   socket.on('poll:create', async (payload) => {
     try {
       payload = validateJoi(pollCreateSocketValidator, payload);
-
-      const created = await createPollService(io, socket, payload);
-      return socket.emit('response', created);
+      return await createPollService(io, socket, payload);
     } catch (err) {
       console.log(err);
       return socket.emit('error', {
@@ -22,8 +20,7 @@ export const pollRegister = (io, socket) => {
     try {
       payload = validateJoi(pollVoteSocketValidator, payload);
 
-      const created = await votePollService(io, socket, payload);
-      return socket.emit('response', created);
+      return await votePollService(io, socket, payload);
     } catch (err) {
       console.log(err);
       return socket.emit('error', {

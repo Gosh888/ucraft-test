@@ -5,6 +5,7 @@ import { createOptionService, getOptionByIdOrFailService } from '../option/optio
 import { createUserOptionService } from '../user-option/user-option.service.js';
 import db from '../../services/db.js';
 import { getUserRoomByIdsOrFailService } from '../user-room/user-room.service.js';
+import { MESSAGE_TYPE } from '../../utils/constants.js';
 
 export const getPollByIdOrFailService = async (id, attributes, include) => {
   const got = await getPollByIdRepo(id, attributes, include);
@@ -24,9 +25,13 @@ export const createPollService = async (io, socket, payload) => {
     createOptionService({ name: o, pollId: createdPoll.id })));
 
   io.sockets.in(`room:${payload.roomId}`)
-    .emit('room:messaged', { user: socket.user, poll: { ...createdPoll.dataValues, option: createdOptions } });
-
-  return { message: 'polled' };
+    .emit('message', {
+      user: socket.user,
+      message: {
+        type: MESSAGE_TYPE.poll,
+        poll: { ...createdPoll.dataValues, option: createdOptions },
+      },
+    });
 };
 
 export const votePollService = async (io, socket, payload) => {
@@ -44,7 +49,11 @@ export const votePollService = async (io, socket, payload) => {
     }],
   }]);
   io.sockets.in(`room:${gotPull.roomId}`)
-    .emit('room:messaged', { user: socket.user, poll: gotPull });
-
-  return { message: 'voted' };
+    .emit('message', {
+      user: socket.user,
+      message: {
+        type: MESSAGE_TYPE.poll,
+        poll: gotPull,
+      },
+    });
 };

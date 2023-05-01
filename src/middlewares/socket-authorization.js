@@ -1,7 +1,7 @@
 import { verifyToken } from '../services/jwt.js';
 import { ValidatorError } from '../utils/error-handling.js';
 import { GENERAL_ERRORS } from '../utils/error-messages.js';
-import { getUserByIdOrFailService } from '../api/user/user.service.js';
+import { getUserConfirmedByIdOrFailService } from '../api/user/user.service.js';
 
 export const socketAuthorization = async (socket, next) => {
   try {
@@ -9,7 +9,7 @@ export const socketAuthorization = async (socket, next) => {
 
     const decoded = verifyToken(token, process.env.JWT_ACCESS_SECRET);
 
-    const user = await getUserByIdOrFailService(decoded.id);
+    const user = await getUserConfirmedByIdOrFailService(decoded.id);
 
     socket.user = {
       id: user.id,

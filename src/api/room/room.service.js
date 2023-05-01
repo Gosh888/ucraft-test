@@ -15,6 +15,7 @@ import {
   getUserRoomByIdsOrFailService,
 } from '../user-room/user-room.service.js';
 import db from '../../services/db.js';
+import { MESSAGE_TYPE } from '../../utils/constants.js';
 
 export const getRoomsService = async (query, attributes, include) => getRoomsRepo(query, attributes, include);
 
@@ -61,21 +62,36 @@ export const joinRoomByIdService = async (io, socket, id) => {
   await getRoomByIdOrFailService(id, ['id']);
   await createUserRoomService({ userId: socket.user.id, roomId: id });
   socket.join(`room:${id}`);
-  socket.broadcast.to(`room:${id}`).emit('room:inform', `${socket.user.firstName} join to room`);
-  return { message: 'joined' };
+  socket.broadcast.to(`room:${id}`).emit('message', {
+    user: socket.user,
+    message: {
+      type: MESSAGE_TYPE.inform,
+      inform: `${socket.user.firstName} join to room`,
+    },
+  });
 };
 
 export const leaveRoomByIdService = async (io, socket, id) => {
   await getRoomByIdOrFailService(id, ['id']);
   await deleteUserRoomByIdsService(socket.user.id, id);
   socket.leave(`room:${id}`);
-  socket.broadcast.to(`room:${id}`).emit('room:inform', `${socket.user.firstName} leave the room`);
-  return { message: 'leaved' };
+  socket.broadcast.to(`room:${id}`).emit('message', {
+    user: socket.user,
+    message: {
+      type: MESSAGE_TYPE.inform,
+      inform: `${socket.user.firstName} leave the room`,
+    },
+  });
 };
 
 export const messageRoomByIdService = async (io, socket, message, id) => {
   await getUserRoomByIdsOrFailService(socket.user.id, id, ['id']);
   await createMessageService(message, socket.user.id, id);
-  io.sockets.in(`room:${id}`).emit('room:messaged', { user: socket.user, message });
-  return { message: 'messaged' };
+  io.sockets.in(`room:${id}`).emit('message', {
+    user: socket.user,
+    message: {
+      type: MESSAGE_TYPE.message,
+      message,
+    },
+  });
 };
